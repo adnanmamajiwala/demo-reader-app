@@ -4,20 +4,25 @@
     let webViewInterface = window.nsWebViewInterface;
     let book;
 
-    console.log('initializing the nsWebViewInterface events');
-
     function init() {
-        console.log('initializing the nsWebViewInterface events');
-
+        webViewInterface.emit( 'log', 'Inside init initializing the nsWebViewInterface events');
         webViewInterface.on('loadBook', function (bookUrl) {
             try {
-                console.log('Starting to initialize the book');
+                webViewInterface.emit( 'log', 'Starting to initialize the book');
                 book = ePub(bookUrl);
-                book.renderTo('book').display();
-                console.log('load completed');
+                book.renderTo('book').display()
+                    .then((data) => {
+                        webViewInterface.emit( 'log', 'Loading book over');
+                        webViewInterface.emit( 'log', data);
+                    })
+                    .catch((er)=>{
+                        webViewInterface.emit( 'log', 'Error Loading book');
+                        webViewInterface.emit( 'log', er);
+                    });
 
             } catch (e) {
-                console.error(e);
+                webViewInterface.emit( 'log', 'error while loading');
+                webViewInterface.emit( 'log', e);
             }
         });
 
