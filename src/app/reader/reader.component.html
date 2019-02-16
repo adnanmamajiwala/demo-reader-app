@@ -1,1 +1,8 @@
-<WebView #epubWebView></WebView>
+<WebView #epubWebView id="wv"
+         (loadStarted)="onLoadStarted()"
+         (loadFinished)="onLoadFinished($event)"></WebView>
+
+         <!--src="~/app/reader/www/epub.html"-->
+         <!--src="https://docs.nativescript.org"-->
+         <!--src="~/app/reader/www/epub.html"-->
+<!--(loadFinished)="onLoadStarted($event)"-->

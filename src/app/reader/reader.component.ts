@@ -1,7 +1,6 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import * as fs from 'tns-core-modules/file-system';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {WebViewInterface} from 'nativescript-webview-interface';
-import {WebView} from 'tns-core-modules/ui/web-view';
+import {isAndroid} from 'tns-core-modules/platform';
 
 @Component({
     selector: 'ns-reader',
@@ -9,51 +8,42 @@ import {WebView} from 'tns-core-modules/ui/web-view';
     styleUrls: ['./reader.component.css'],
     moduleId: module.id,
 })
-export class ReaderComponent implements OnInit {
+export class ReaderComponent implements OnInit, AfterViewInit {
 
     @ViewChild('epubWebView') epubWebViewRef: ElementRef;
     private webViewInterface: WebViewInterface;
 
-    private get epubWebView(): WebView {
+    private get epubWebView() {
         return this.epubWebViewRef.nativeElement;
     }
 
     public ngOnInit(): void {
-        this.configureBookWebView();
+    }
+
+    ngAfterViewInit() {
         this.webViewInterface = new WebViewInterface(this.epubWebView, '~/app/reader/www/epub.html');
-        this.epubWebView.on(WebView.loadFinishedEvent, () => {
-            this.webViewInterface.emit('loadBook', 'moby-dick.epub');
-            // this.webViewInterface.emit('loadBook', 'https://s3-us-west-2.amazon
-            // aws.com/pressbooks-samplefiles/MetamorphosisJacksonTheme/Metamorphosis-jackson.epub');
-        });
-
-        // const book = ePub.default('~/assets/sample.epub');
-        // const rendition = book.renderTo('area', {});
-        // const displayed = rendition.display();
-        this.printFs('app/reader/www');
     }
 
-    private configureBookWebView(): void {
-        console.log('settings -->', this.epubWebView.android);
-        const settings = this.epubWebView.android.getSettings();
-        settings.setAllowFileAccessFromFileURLs(true);
-        settings.setBuiltInZoomControls(false);
-        settings.setDisplayZoomControls(false);
+        onLoadStarted() {
+        if (isAndroid) {
+            const settings = this.epubWebView.android.getSettings();
+            settings.setAllowFileAccessFromFileURLs(true);
+            settings.setAllowUniversalAccessFromFileURLs(true);
+            settings.setBuiltInZoomControls(false);
+            settings.setDisplayZoomControls(false);
+            settings.setLoadWithOverviewMode(true);
+            // settings.setUseWideViewPort(true);
+            settings.setJavaScriptEnabled(true);
+            settings.setAllowFileAccess(true);
+            settings.setAllowContentAccess(true);
+        }
     }
 
-
-    printFs(path) {
-        fs.knownFolders.currentApp().getFolder(path).getEntities()
-            .then(value => {
-                value.forEach(data => {
-                    if (fs.knownFolders.currentApp().getFolder(data.name).isKnown) {
-                        console.log('isKnown ----> ', data.name);
-                    } else {
-                        console.log('else ----> ', data);
-                    }
-                });
-
-            });
+    onLoadFinished(args) {
+        console.log('load finished2');
+        console.log(args);
+        const bookUrl = 'https://s3-us-west-2.amazonaws.com/pressbooks-samplefiles/MetamorphosisJacksonTheme/Metamorphosis-jackson.epub';
+        this.webViewInterface.emit('loadBook', bookUrl);
     }
 
 }
