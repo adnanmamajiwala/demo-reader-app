@@ -1,8 +1,11 @@
-<WebView #epubWebView id="wv"
-         (loadStarted)="onLoadStarted()"
-         (loadFinished)="onLoadFinished($event)"></WebView>
+<GridLayout>
+    <WebView #epubWebView id="wv"
+             src="~/app/reader/www/epub.html"
+             (loadStarted)="onLoadStarted()"
+             (loadFinished)="onLoadFinished($event)"></WebView>
+</GridLayout>
 
-         <!--src="~/app/reader/www/epub.html"-->
-         <!--src="https://docs.nativescript.org"-->
-         <!--src="~/app/reader/www/epub.html"-->
+<!--src="~/app/reader/www/epub.html"-->
+<!--src="https://docs.nativescript.org"-->
+<!--src="~/app/reader/www/epub.html"-->
 <!--(loadFinished)="onLoadStarted($event)"-->

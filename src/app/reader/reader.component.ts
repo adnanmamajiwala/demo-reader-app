@@ -21,10 +21,10 @@ export class ReaderComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this.webViewInterface = new WebViewInterface(this.epubWebView, '~/app/reader/www/epub.html');
+
     }
 
-        onLoadStarted() {
+    onLoadStarted() {
         if (isAndroid) {
             const settings = this.epubWebView.android.getSettings();
             settings.setAllowFileAccessFromFileURLs(true);
@@ -41,7 +41,8 @@ export class ReaderComponent implements OnInit, AfterViewInit {
 
     onLoadFinished(args) {
         console.log('load finished2');
-        console.log(args);
+        console.log(args.errors);
+        this.webViewInterface = new WebViewInterface(this.epubWebView, '~/app/reader/www/epub.html');
         const bookUrl = 'https://s3-us-west-2.amazonaws.com/pressbooks-samplefiles/MetamorphosisJacksonTheme/Metamorphosis-jackson.epub';
         this.webViewInterface.emit('loadBook', bookUrl);
     }
