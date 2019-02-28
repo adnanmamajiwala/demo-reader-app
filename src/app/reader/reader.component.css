@@ -1,1 +1,8 @@
 /* Add mobile styles for the component here.  */
+.bottom-nav{
+    vertical-align: bottom;
+}
+
+.web-view {
+    vertical-align: center;
+}

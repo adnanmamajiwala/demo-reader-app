@@ -1,0 +1,24 @@
+<GridLayout height="60" verticalAlignment="bottom">
+    <GridLayout columns="*, *, *, *, *" height="60" class="nav-primary">
+        <StackLayout #image1 col="0" (tap)="selectTab(0)">
+            <Image src="~/assets/ic_home2.png" class="nav-icon" ></Image>
+            <Label class="h5 nav-title" text="Home" ></Label>
+        </StackLayout>
+        <StackLayout #image2 col="1" (tap)="navPage(0)">
+            <Image src="~/assets/ic_previous.png" class="nav-icon"></Image>
+            <Label class="h5 nav-title" text="Previous"></Label>
+        </StackLayout>
+        <StackLayout #image3 col="2" (tap)="selectTab(2)">
+            <Image src="~/assets/ic_toc.png" class="nav-icon"></Image>
+            <Label class="h5 nav-title" text="Chapters"></Label>
+        </StackLayout>
+        <StackLayout #image4 col="3" (tap)="toggleNightMode()">
+            <Image src="~/assets/ic_night_mode.png" class="nav-icon"></Image>
+            <Label class="h5 nav-title" text="Mode"></Label>
+        </StackLayout>
+        <StackLayout #image5 col="4" (tap)="navPage(1)">
+            <Image src="~/assets/ic_next.png" class="nav-icon"></Image>
+            <Label class="h5 nav-title" text="Next"></Label>
+        </StackLayout>
+    </GridLayout>
+</GridLayout>

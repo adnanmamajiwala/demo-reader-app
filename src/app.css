@@ -10,3 +10,28 @@ of writing your own CSS rules. For a full list of class names in the theme
 refer to http://docs.nativescript.org/ui/theme.
 */
 @import '~nativescript-theme-core/css/core.light.css';
+
+.far {
+    font-family: 'Font Awesome 5 Free', fa-regular-400;
+    font-weight: 400;
+}
+
+.fab {
+    font-family: 'Font Awesome 5 Brands', fa-brands-400;
+    font-weight: 400;
+}
+
+.fas {
+    font-family: 'Font Awesome 5 Free', fa-solid-900;
+    font-weight: 900;
+}
+
+.ico {
+    font-family: 'IcoMoon-Free', icomoon;
+    font-weight: 400;
+}
+
+.border-1 {
+    border-color: black;
+    border-width: 1;
+}

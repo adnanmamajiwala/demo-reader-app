@@ -1,8 +1,9 @@
+<ActionBar [title]="'My Book Title'">
+</ActionBar>
 <GridLayout>
-    <WebView #epubWebView id="wv"></WebView>
+    <WebView #epubWebView
+             (doubleTap)="toggleNav()"
+             class="border-1"
+             (swipe)="onSwipe($event)"></WebView>
+    <ns-reader-bottom-nav *ngIf="toggleBottomNav"></ns-reader-bottom-nav>
 </GridLayout>
-
-<!--src="~/app/reader/www/epub.html"-->
-<!--src="https://docs.nativescript.org"-->
-<!--src="~/app/reader/www/epub.html"-->
-<!--(loadFinished)="onLoadStarted($event)"-->

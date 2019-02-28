@@ -3,37 +3,38 @@
 
     let webViewInterface = window.nsWebViewInterface;
     let book;
+    let rendition;
 
-    function init() {
-        webViewInterface.emit( 'log', 'Inside init initializing the nsWebViewInterface events');
-        webViewInterface.on('loadBook', function (bookUrl) {
-            try {
-                webViewInterface.emit( 'log', 'Starting to initialize the book');
-                book = ePub(bookUrl);
-                book.renderTo('book').display()
-                    .then((data) => {
-                        webViewInterface.emit( 'log', 'Loading book over');
-                        webViewInterface.emit( 'log', data);
-                    })
-                    .catch((er)=>{
-                        webViewInterface.emit( 'log', 'Error Loading book');
-                        webViewInterface.emit( 'log', er);
-                    });
+    webViewInterface.on('loadBook', function (bookUrl) {
+        webViewInterface.emit('log', 'Starting to initialize the book');
+        let width = Math.max(document.body.offsetWidth, document.body.clientWidth, document.body.scrollWidth) - 50;
+        let height = Math.max(document.body.offsetHeight, document.body.clientHeight, document.body.scrollHeight) - 75;
 
-            } catch (e) {
-                webViewInterface.emit( 'log', 'error while loading');
-                webViewInterface.emit( 'log', e);
-            }
-        });
+        webViewInterface.emit('log', {width: width, height: height});
+        book = window.ePub(bookUrl);
+        rendition = book.renderTo('book', {width: width, height: height});
+        rendition.display();
 
-        webViewInterface.on('nextPage', function () {
-            book.nextPage();
-        });
+        // rendition.themes.fontSize('12pt');
+        // rendition.themes.register({'light': {'body': {'color': 'purple'}}});
+        rendition.themes.register('dark', {'body': {'color': 'white', 'background-color': 'black'}});
+        rendition.themes.register('light', {'body': {'color': 'black', 'background-color': 'white'}});
+        // rendition.themes.select('light');
+        // book.loaded.navigation.then(function (toc) {
+        //     window.nsWebViewInterface.emit('log', 'toc---->');
+        //     window.nsWebViewInterface.emit('log', toc);
+        // }).catch(data => {
+        //     window.nsWebViewInterface.emit('log', 'error toc---->');
+        //     window.nsWebViewInterface.emit('log', data);
+        // });
 
-        webViewInterface.on('previousPage', function () {
-            book.prevPage();
-        })
-    }
+    });
 
-    init();
+    webViewInterface.on('theme', (data) => {
+        rendition.themes.select(data);
+        document.body.style.backgroundColor = data === 'dark' ? 'black' : 'white';
+    });
+    webViewInterface.on('nextPage', () => rendition.next());
+    webViewInterface.on('previousPage', () => rendition.prev());
+
 })();
