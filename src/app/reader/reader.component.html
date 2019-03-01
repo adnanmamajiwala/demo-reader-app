@@ -1,9 +1,23 @@
 <ActionBar [title]="'My Book Title'">
 </ActionBar>
-<GridLayout>
-    <WebView #epubWebView
-             (doubleTap)="toggleNav()"
-             class="border-1"
-             (swipe)="onSwipe($event)"></WebView>
-    <ns-reader-bottom-nav *ngIf="toggleBottomNav"></ns-reader-bottom-nav>
-</GridLayout>
+<RadSideDrawer>
+    <StackLayout tkDrawerContent class="bg-primary">
+        <GridLayout class="side-title">
+            <Label col="0" text="Table of Contents" class="side-title-toc"></Label>
+            <Label col="1" text="&#xf057;" (tap)="onCloseDrawerTap()" class="far side-title-close"></Label>
+        </GridLayout>
+        <ScrollView>
+            <StackLayout class="bg-primary">
+                <StackLayout *ngFor="let item of navItems" (tap)="navigateToChapter(item.href)">
+                    <Label [text]="item.label" class="h3 sideLabel"></Label>
+                </StackLayout>
+            </StackLayout>
+        </ScrollView>
+    </StackLayout>
+    <GridLayout tkMainContent>
+        <WebView #epubWebView
+                 (doubleTap)="toggleBottomNav = !toggleBottomNav"
+                 (swipe)="onSwipe($event)"></WebView>
+        <app-reader-bottom-nav *ngIf="toggleBottomNav" (showChapters)="openDrawer()"></app-reader-bottom-nav>
+    </GridLayout>
+</RadSideDrawer>

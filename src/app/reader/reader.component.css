@@ -1,8 +1,41 @@
 /* Add mobile styles for the component here.  */
-.bottom-nav{
+.bottom-nav {
     vertical-align: bottom;
 }
 
 .web-view {
     vertical-align: center;
+}
+
+.side-title {
+    background-color: rgb(57, 57, 57);
+    color: white;
+    height: 56;
+}
+
+.side-title-toc {
+    vertical-align: center;
+    horizontal-align: center;
+    text-align: center;
+}
+
+.side-title-close {
+    vertical-align: center;
+    horizontal-align: right;
+    text-align: right;
+    padding-right: 15;
+}
+
+.side-title Label {
+    font-size: 18;
+    font-weight: 500;
+}
+
+.sideLabel {
+    padding: 15;
+    width: 100%;
+    border-color: #c9c9c9;
+    border-bottom-width: 1;
+    color: #03a87c;
+    font-size: 16;
 }

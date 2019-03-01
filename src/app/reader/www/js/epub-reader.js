@@ -7,27 +7,15 @@
 
     webViewInterface.on('loadBook', function (bookUrl) {
         webViewInterface.emit('log', 'Starting to initialize the book');
-        let width = Math.max(document.body.offsetWidth, document.body.clientWidth, document.body.scrollWidth) - 50;
-        let height = Math.max(document.body.offsetHeight, document.body.clientHeight, document.body.scrollHeight) - 75;
-
-        webViewInterface.emit('log', {width: width, height: height});
+        let width = Math.max(document.body.offsetWidth, document.body.clientWidth, document.body.scrollWidth) - 10;
+        let height = Math.max(document.body.offsetHeight, document.body.clientHeight, document.body.scrollHeight) - 35;
         book = window.ePub(bookUrl);
         rendition = book.renderTo('book', {width: width, height: height});
         rendition.display();
 
-        // rendition.themes.fontSize('12pt');
-        // rendition.themes.register({'light': {'body': {'color': 'purple'}}});
         rendition.themes.register('dark', {'body': {'color': 'white', 'background-color': 'black'}});
         rendition.themes.register('light', {'body': {'color': 'black', 'background-color': 'white'}});
-        // rendition.themes.select('light');
-        // book.loaded.navigation.then(function (toc) {
-        //     window.nsWebViewInterface.emit('log', 'toc---->');
-        //     window.nsWebViewInterface.emit('log', toc);
-        // }).catch(data => {
-        //     window.nsWebViewInterface.emit('log', 'error toc---->');
-        //     window.nsWebViewInterface.emit('log', data);
-        // });
-
+        book.loaded.navigation.then((toc) => webViewInterface.emit('toc', toc));
     });
 
     webViewInterface.on('theme', (data) => {
@@ -36,5 +24,6 @@
     });
     webViewInterface.on('nextPage', () => rendition.next());
     webViewInterface.on('previousPage', () => rendition.prev());
+    webViewInterface.on('navToChapter', (data) => rendition.display(data));
 
 })();

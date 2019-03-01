@@ -3,6 +3,8 @@ import {WebViewInterface} from 'nativescript-webview-interface';
 import {LoadEventData, WebView} from 'tns-core-modules/ui/web-view';
 import {isAndroid, isIOS} from 'tns-core-modules/platform';
 import * as fs from 'tns-core-modules/file-system';
+import {BehaviorSubject, Observable} from 'rxjs';
+import Navigation from 'epubjs/types/navigation';
 
 @Injectable({
     providedIn: 'root'
@@ -11,8 +13,13 @@ export class EpubService {
 
     private _epubWebView;
     private webViewInterface: WebViewInterface;
+    private navigationSubject = new BehaviorSubject<Navigation>(null);
 
     constructor() {
+    }
+
+    getNavigationObservable(): Observable<Navigation> {
+        return this.navigationSubject.asObservable();
     }
 
     set epubWebView(webView) {
@@ -41,6 +48,7 @@ export class EpubService {
         this.webViewInterface = new WebViewInterface(this.epubWebView, '~/app/reader/www/epub.html');
 
         this.webViewInterface.on('log', (arg) => console.log('log emitted -> ', arg));
+        this.webViewInterface.on('toc', (arg) => this.navigationSubject.next(arg));
 
         // load of webView.
         this.epubWebView.on(WebView.loadStartedEvent, (args: LoadEventData) => context.onLoadStarted());
@@ -77,5 +85,9 @@ export class EpubService {
         }
 
         this.webViewInterface.emit('loadBook', bookUrl);
+    }
+
+    gotoChapter(url: string) {
+        this.webViewInterface.emit('navToChapter', url);
     }
 }
