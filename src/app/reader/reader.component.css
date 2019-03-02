@@ -39,3 +39,11 @@
     color: #03a87c;
     font-size: 16;
 }
+
+.page-number {
+    color: #9a9a9a;
+    margin-left: 20;
+    margin-right: 20;
+    margin-top: 5;
+    font-style: italic;
+}

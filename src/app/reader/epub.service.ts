@@ -5,6 +5,7 @@ import {isAndroid, isIOS} from 'tns-core-modules/platform';
 import * as fs from 'tns-core-modules/file-system';
 import {BehaviorSubject, Observable} from 'rxjs';
 import Navigation from 'epubjs/types/navigation';
+import {DisplayedLocation} from 'epubjs/types/rendition';
 
 @Injectable({
     providedIn: 'root'
@@ -14,12 +15,17 @@ export class EpubService {
     private _epubWebView;
     private webViewInterface: WebViewInterface;
     private navigationSubject = new BehaviorSubject<Navigation>(null);
+    private displayedLocationSubject = new BehaviorSubject<DisplayedLocation>(null);
 
     constructor() {
     }
 
     getNavigationObservable(): Observable<Navigation> {
         return this.navigationSubject.asObservable();
+    }
+
+    getDisplayedLocationObservable(): Observable<DisplayedLocation> {
+        return this.displayedLocationSubject.asObservable();
     }
 
     set epubWebView(webView) {
@@ -49,6 +55,7 @@ export class EpubService {
 
         this.webViewInterface.on('log', (arg) => console.log('log emitted -> ', arg));
         this.webViewInterface.on('toc', (arg) => this.navigationSubject.next(arg));
+        this.webViewInterface.on('displayedLocation', (arg) => this.displayedLocationSubject.next(arg));
 
         // load of webView.
         this.epubWebView.on(WebView.loadStartedEvent, (args: LoadEventData) => context.onLoadStarted());

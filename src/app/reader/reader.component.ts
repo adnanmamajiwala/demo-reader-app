@@ -3,6 +3,7 @@ import {EpubService} from '~/app/reader/epub.service';
 import {RadSideDrawerComponent} from 'nativescript-ui-sidedrawer/angular';
 import {RadSideDrawer} from 'nativescript-ui-sidedrawer';
 import Navigation, {NavItem} from 'epubjs/types/navigation';
+import {DisplayedLocation} from 'epubjs/types/rendition';
 
 @Component({
     selector: 'ns-reader',
@@ -17,6 +18,7 @@ export class ReaderComponent implements OnInit, AfterViewInit {
     toggleBottomNav = true;
     drawer: RadSideDrawer;
     navItems: Array<NavItem>;
+    displayedLocation: DisplayedLocation;
 
     constructor(private epubService: EpubService,
                 private changeDetectionRef: ChangeDetectorRef) {
@@ -32,10 +34,14 @@ export class ReaderComponent implements OnInit, AfterViewInit {
         this.epubService.getNavigationObservable()
             .subscribe((nav: Navigation) => {
                 this.navItems = !!nav ? nav.toc : new Array<NavItem>();
-                console.log('TOC getNavigationObservable --->', nav);
-                this.openDrawer();
                 this.changeDetectionRef.detectChanges();
             });
+        this.epubService.getDisplayedLocationObservable()
+            .subscribe((data) => {
+                this.displayedLocation = !!data ? data : null;
+                this.changeDetectionRef.detectChanges();
+            });
+
         this.changeDetectionRef.detectChanges();
     }
 
@@ -58,5 +64,14 @@ export class ReaderComponent implements OnInit, AfterViewInit {
 
     public onCloseDrawerTap() {
         this.drawer.closeDrawer();
+    }
+
+    get pageNumber(): string {
+        const displayed = !!this.displayedLocation ? this.displayedLocation.displayed : null;
+        return !!displayed ? 'Page '.concat(displayed.page.toString(), ' of ', displayed.total.toString()) : '';
+    }
+
+    get sectionNumber(): string {
+        return !!this.displayedLocation ? 'Section ' + this.displayedLocation.index : '';
     }
 }
